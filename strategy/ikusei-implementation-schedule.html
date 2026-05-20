@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>育成チーム 施策実行スケジュール 2026 v0.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #28008C;
+    --blue-light: #EEEBFA;
+    --blue-mid: #C7BCEA;
+    --purple: #7C3AED;
+    --purple-light: #F5F3FF;
+    --purple-mid: #DDD6FE;
+    --teal: #0D9488;
+    --teal-light: #F0FDFA;
+    --teal-mid: #99F6E4;
+    --pink: #DB2777;
+    --pink-light: #FDF2F8;
+    --pink-mid: #FBCFE8;
+    --sky: #0EA5E9;
+    --sky-light: #F0F9FF;
+    --gray-dark: #475569;
+    --gray-dark-light: #F1F5F9;
+    --gray-dark-mid: #CBD5E1;
+    --status-continue: #4D7C0F;
+    --status-continue-light: #F7FEE7;
+    --status-continue-mid: #BEF264;
+    --status-redesign: #9F1239;
+    --status-redesign-light: #FFF1F2;
+    --status-redesign-mid: #FECDD3;
+    --status-new: #4F46E5;
+    --status-new-light: #EEF2FF;
+    --status-new-mid: #C7D2FE;
+    --status-pending: #475569;
+    --status-pending-light: #F1F5F9;
+    --status-pending-mid: #CBD5E1;
+    --yellow: #CA8A04;
+    --yellow-light: #FEFCE8;
+    --yellow-mid: #FEF08A;
+    --text: #111827;
+    --dark-bg: #3730A3;
+    --text-sub: #6B7280;
+    --border: #E5E7EB;
+    --white: #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans JP', sans-serif; font-size: 14px; line-height: 1.7; color: var(--text); background: #FAFAFA; }
+
+  /* ヘッダー */
+  .doc-header { background: var(--dark-bg); color: white; padding: 48px 64px 40px; position: relative; overflow: hidden; }
+  .doc-header::before { content: ''; position: absolute; top: 0; right: 0; width: 300px; height: 100%; background: linear-gradient(135deg, transparent 50%, rgba(55,138,221,0.15) 50%); }
+  .doc-header .badge { display: inline-block; background: var(--blue); color: white; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; padding: 4px 10px; border-radius: 2px; margin-bottom: 16px; }
+  .doc-header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.3; }
+  .doc-header .slogan { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 500; color: var(--blue-mid); letter-spacing: 0.05em; margin-bottom: 6px; }
+  .doc-header .slogan-ja { font-size: 14px; font-weight: 300; color: #9CA3AF; margin-bottom: 24px; }
+  .doc-header .meta { display: flex; gap: 24px; font-size: 12px; color: #9CA3AF; font-family: 'Inter', sans-serif; flex-wrap: wrap; }
+  .doc-header .meta span { display: flex; align-items: center; gap: 6px; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 32px 80px; }
+
+  .section { margin-top: 32px; background: white; border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+  .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .section-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: var(--blue); color: white; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; border-radius: 50%; flex-shrink: 0; }
+  .section-title { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; color: var(--text); }
+  .subsection { margin-top: 32px; }
+  .subsection-title { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; color: var(--text-sub); text-transform: uppercase; margin-bottom: 12px; padding-left: 10px; border-left: 3px solid var(--blue); }
+
+  .section-hero { font-size: 20px; font-weight: 700; color: var(--text); line-height: 1.5; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .section-hero-sub { font-size: 13px; color: var(--text-sub); line-height: 1.7; margin-bottom: 28px; }
+
+  /* テーブル基本 */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+  th { background: var(--dark-bg); color: white; font-weight: 500; font-size: 11px; letter-spacing: 0.05em; padding: 10px 14px; text-align: left; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #FAFAFA; }
+
+  /* ガントチャート用テーブル */
+  .gantt-table { font-size: 11px; }
+  .gantt-table th { padding: 8px 6px; text-align: center; font-size: 10px; }
+  .gantt-table th.name { text-align: left; padding: 8px 12px; min-width: 200px; }
+  .gantt-table th.status { min-width: 60px; }
+  .gantt-table td { padding: 6px 4px; text-align: center; font-size: 12px; border-right: 1px solid var(--border); }
+  .gantt-table td.name { text-align: left; padding: 6px 12px; font-size: 12px; font-weight: 500; }
+  .gantt-table td.status { font-size: 10px; padding: 6px 4px; }
+  .gantt-table td.dash { color: #D1D5DB; }
+
+  /* ガント記号セルの色付け */
+  .cell-design { background: var(--purple-light); color: var(--purple); font-weight: 700; }
+  .cell-build  { background: var(--sky-light);    color: var(--sky);    font-weight: 700; }
+  .cell-run    { background: var(--teal-light);   color: var(--teal);   font-weight: 700; }
+  .cell-keep   { background: #F9FAFB; color: var(--gray-dark); }
+  .cell-star   { background: #FEF3C7; color: #B45309; font-weight: 700; }
+  .cell-none   { background: #FAFAFA; color: #D1D5DB; }
+
+  /* 軸ヘッダー */
+  .axis-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; margin-top: 20px; }
+  .axis-icon { display: inline-block; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 3px; }
+  .axis-q { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-mid); }
+  .axis-t { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-mid); }
+  .axis-c { background: var(--pink-light); color: var(--pink); border: 1px solid var(--pink-mid); }
+  .axis-title { font-size: 16px; font-weight: 700; }
+
+  /* 施策カード */
+  .measure-card { margin-top: 20px; border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; background: white; }
+  .measure-card.axis-q-card { border-left: 4px solid var(--purple); }
+  .measure-card.axis-t-card { border-left: 4px solid var(--teal); }
+  .measure-card.axis-c-card { border-left: 4px solid var(--pink); }
+  .measure-card.deleted { background: #F1F5F9; border-left-color: #94A3B8; opacity: 0.7; }
+  .measure-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .measure-id { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; color: var(--text-sub); background: #F3F4F6; padding: 2px 6px; border-radius: 3px; }
+  .measure-name { font-size: 15px; font-weight: 700; color: var(--text); flex: 1; }
+  .measure-star { color: #B45309; font-weight: 700; }
+
+  /* 施策メタ情報 */
+  .measure-meta { font-size: 12px; line-height: 1.6; margin-bottom: 14px; }
+  .measure-meta dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; }
+  .measure-meta dt { color: var(--text-sub); font-weight: 600; white-space: nowrap; }
+  .measure-meta dd { color: var(--text); }
+  .measure-plan { margin-top: 12px; }
+  .measure-plan-title { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .measure-plan ul { list-style: none; padding: 0; }
+  .measure-plan li { padding: 4px 0 4px 16px; position: relative; font-size: 12px; }
+  .measure-plan li::before { content: '·'; color: var(--blue); position: absolute; left: 6px; font-weight: 700; }
+  .measure-milestone { margin-top: 10px; padding: 8px 12px; background: var(--blue-light); border-left: 3px solid var(--blue); font-size: 12px; border-radius: 0 4px 4px 0; }
+
+  /* ステータスバッジ */
+  .status-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.05em; white-space: nowrap; }
+  .status-badge.continue { background: var(--status-continue-light); color: var(--status-continue); border: 1px solid var(--status-continue-mid); }
+  .status-badge.redesign { background: var(--status-redesign-light); color: var(--status-redesign); border: 1px solid var(--status-redesign-mid); }
+  .status-badge.new { background: var(--status-new-light); color: var(--status-new); border: 1px solid var(--status-new-mid); }
+  .status-badge.repair { background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D; }
+  .status-badge.future { background: var(--status-pending-light); color: var(--status-pending); border: 1px solid var(--status-pending-mid); }
+  .status-badge.deleted { background: #E5E7EB; color: #6B7280; border: 1px solid #D1D5DB; text-decoration: line-through; }
+
+  /* インフォボックス */
+  .info-box { background: var(--blue-light); border-left: 4px solid var(--blue); padding: 14px 18px; border-radius: 0 6px 6px 0; font-size: 13px; line-height: 1.7; margin-top: 16px; color: #1E3A5F; }
+  .note-box { background: var(--yellow-light); border-left: 4px solid var(--yellow); padding: 12px 16px; border-radius: 0 6px 6px 0; font-size: 12px; color: var(--yellow); margin-top: 12px; }
+  .warn-box { background: var(--status-redesign-light); border-left: 4px solid var(--status-redesign); padding: 12px 16px; border-radius: 0 6px 6px 0; font-size: 12px; color: var(--status-redesign); margin-top: 12px; }
+
+  .tbd { display: inline-block; background: #FEF3C7; color: #D97706; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 2px; font-family: 'Inter', sans-serif; letter-spacing: 0.05em; }
+
+  /* マイルストーン表 */
+  .milestone-table th:nth-child(1) { width: 140px; }
+  .milestone-table th:nth-child(3) { width: 140px; }
+  .milestone-table .star-row td { background: #FEF3C7; font-weight: 700; }
+
+  /* 凡例 */
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0 4px; font-size: 11px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-symbol { display: inline-block; width: 22px; height: 22px; border-radius: 3px; text-align: center; line-height: 22px; font-weight: 700; font-size: 12px; }
+
+  /* footer */
+  .doc-footer { background: var(--dark-bg); color: #6B7280; padding: 24px 64px; font-size: 11px; font-family: 'Inter', sans-serif; display: flex; justify-content: space-between; align-items: center; margin-top: 80px; }
+  .doc-footer a { color: #9CA3AF; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="badge">IMPLEMENTATION SCHEDULE 2026 — v0.1</div>
+  <h1>育成チーム 施策実行スケジュール</h1>
+  <div class="slogan">Always Moving</div>
+  <div class="slogan-ja">— 17施策を1年で動かしきる</div>
+  <div class="meta">
+    <span>📅 2026年5月19日 作成 / 2026年5月20日 v0.1 反映</span>
+    <span>👤 L: 木下勇太 / M: 浦本絃希</span>
+    <span>🏢 キカガク PMG Group 育成チーム</span>
+    <span>📎 <a href="./ikusei-team-strategy.html" style="color: #9CA3AF;">戦略doc</a> / <a href="./HANDOFF-ikusei.md" style="color: #9CA3AF;">引き継ぎ資料</a></span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SECTION 01 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-title">このドキュメントの位置づけ</div>
+    </div>
+    <p class="section-hero">育成チーム戦略 v3 で定義した 17施策 を、月次レベルで実行可能なスケジュールに落とし込む</p>
+    <p class="section-hero-sub">期限・順序・担当・依存を整理して、いつ何を動かすかを明確にする作業用ドキュメント。報告版は本詳細版から抽出して別途生成する。</p>
+
+    <div class="info-box">
+      <strong>2 つのバージョン</strong><br>
+      ① <strong>詳細版 (このドキュメント)</strong>: 月次粒度・全17施策・依存関係・担当を含む source of truth<br>
+      ② <strong>報告版 (後日生成)</strong>: 四半期サマリ・上司向け。詳細版から抽出する
+    </div>
+
+    <div class="note-box">
+      <strong>ステータス</strong>: <strong>ドラフト v0.1</strong> — 期限・順序・担当はレビュー反映済みだが未確定項目あり (各施策の TBD 参照)
+    </div>
+  </div>
+
+  <!-- SECTION 02 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-title">前提条件・スコープ</div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">期間と体制</div>
+      <table>
+        <tr><th style="width:160px;">項目</th><th>内容</th></tr>
+        <tr><td>対象期間</td><td><strong>2026年5月 〜 2027年5月</strong> (木下さん育休期間の1年間)</td></tr>
+        <tr><td>L (リーダー)</td><td>木下勇太 (育休中、FB・最終判断、復帰目処 2027-05)</td></tr>
+        <tr><td>M (マネージャー)</td><td>浦本絃希 (実質的な意思決定・運営主体)</td></tr>
+        <tr><td>サポート</td><td>日常運営: 岡野美月さん / 戦略相談: 駿さん (現状は未提示)</td></tr>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">期間設計の根拠</div>
+      <ul style="list-style: none; padding: 0; font-size: 13px;">
+        <li style="padding: 4px 0 4px 16px; position: relative;"><span style="position: absolute; left: 0; color: var(--blue);">●</span> 2026-05: 育成チーム正式発足</li>
+        <li style="padding: 4px 0 4px 16px; position: relative;"><span style="position: absolute; left: 0; color: var(--blue);">●</span> 2026-06: 社内新人がPMG配属 → Q1 OJT開始</li>
+        <li style="padding: 4px 0 4px 16px; position: relative;"><span style="position: absolute; left: 0; color: var(--blue);">●</span> 2026-06末: Q6 チェックリスト確定 (ハブ施策)</li>
+        <li style="padding: 4px 0 4px 16px; position: relative;"><span style="position: absolute; left: 0; color: var(--blue);">●</span> 2026-12: KR2 (採用10名/年) 達成期限</li>
+        <li style="padding: 4px 0 4px 16px; position: relative;"><span style="position: absolute; left: 0; color: var(--blue);">●</span> 2027-05: 木下復帰、通年KR評価、下期戦略見直し</li>
+      </ul>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">優先度判定基準</div>
+      <ol style="padding-left: 22px; font-size: 13px;">
+        <li><strong>KR直接寄与</strong>: KR1 (品質) / KR2 (講師力養成講座 採用) への寄与度</li>
+        <li><strong>依存解消</strong>: 後続施策のブロッカーになるもの先行</li>
+        <li><strong>コスト浮き効果</strong>: 育成工数▲ への寄与</li>
+        <li><strong>不可逆性</strong>: 設計し直しが効くもの後送り</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- SECTION 03 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-title">全体マイルストーン</div>
+    </div>
+    <p class="section-hero-sub">期間中の主要マイルストーン。★ は KR/KPI 達成判定点。</p>
+
+    <table class="milestone-table">
+      <tr><th>時期</th><th>マイルストーン</th><th>関連 KR/KPI</th></tr>
+      <tr><td>2026-05</td><td>育成チーム正式発足、運営フロー稼働</td><td>—</td></tr>
+      <tr><td>2026-06 末</td><td><strong>Q6 チェックリスト確定 ★</strong> (Q3/Q4/C4 の前提)</td><td>KR1</td></tr>
+      <tr><td>2026-07</td><td>Q2 Slackアラート稼働 / Q4 シート設計確定 / T5 公開・応募受付開始</td><td>KR1 / KR2</td></tr>
+      <tr><td>2026-10</td><td>Q3 ネガティブチェック稼働 / Q5 巡回定常運用 / Q4 シート標準化 / C4 改修版稼働</td><td>KR1</td></tr>
+      <tr class="star-row"><td>2026-12</td><td><strong>講師力養成講座 経由 P講師採用 累計10名達成 ★ (KR2 達成)</strong></td><td>KR2</td></tr>
+      <tr><td>2027-01</td><td>中間振り返り、翌年度ペース見直し</td><td>全KR</td></tr>
+      <tr><td>2027-03</td><td>育成工数▲ 第一段階達成想定 (社内40h→35h目安)</td><td>コストKPI</td></tr>
+      <tr><td>2027-05</td><td>通年KR評価、2027下期戦略見直し、木下復帰移行</td><td>全KR</td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 04 月次ロードマップ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div class="section-title">月次ロードマップ (全17施策一覧)</div>
+    </div>
+    <p class="section-hero-sub">17施策を月次粒度で可視化。記号で各月のフェーズを示す。</p>
+
+    <div class="legend">
+      <span class="legend-item"><span class="legend-symbol cell-design">◆</span>設計</span>
+      <span class="legend-item"><span class="legend-symbol cell-build">◇</span>構築/準備</span>
+      <span class="legend-item"><span class="legend-symbol cell-run">●</span>運用/実行</span>
+      <span class="legend-item"><span class="legend-symbol cell-keep">=</span>継続運用</span>
+      <span class="legend-item"><span class="legend-symbol cell-star">★</span>マイルストーン</span>
+      <span class="legend-item"><span class="legend-symbol cell-none">—</span>該当なし</span>
+    </div>
+
+    <!-- 軸① 品質 -->
+    <div class="axis-header"><span class="axis-icon axis-q">AXIS Q</span><span class="axis-title">品質 (6施策)</span></div>
+    <table class="gantt-table">
+      <tr>
+        <th class="name">施策</th>
+        <th class="status">状態</th>
+        <th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th><th>11</th><th>12</th><th>01</th><th>02</th><th>03</th><th>04</th><th>05</th>
+      </tr>
+      <tr>
+        <td class="name">Q1 OJT・メンタリング</td>
+        <td class="status"><span class="status-badge new">新規</span></td>
+        <td class="cell-design">◆</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">Q2 Slackアラート (2段階閾値)</td>
+        <td class="status"><span class="status-badge new">新規</span></td>
+        <td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">Q3 動画AI明瞭度ネガティブチェック</td>
+        <td class="status"><span class="status-badge redesign">再設計</span></td>
+        <td class="cell-design">◆</td><td class="cell-design">◆</td><td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">Q4 パフォーマンスシート更新</td>
+        <td class="status"><span class="status-badge new">新規</span></td>
+        <td class="cell-design">◆</td><td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">Q5 巡回チェックフロー</td>
+        <td class="status"><span class="status-badge new">新規</span></td>
+        <td class="cell-design">◆</td><td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">Q6 チェックリスト ★ハブ</td>
+        <td class="status"><span class="status-badge new">新規</span></td>
+        <td class="cell-design">◆</td><td class="cell-star">★</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+    </table>
+
+    <!-- 軸② 講師力養成講座活用 -->
+    <div class="axis-header"><span class="axis-icon axis-t">AXIS T</span><span class="axis-title">講師力養成講座活用 (7施策、T7 は T6 に統合)</span></div>
+    <table class="gantt-table">
+      <tr>
+        <th class="name">施策</th>
+        <th class="status">状態</th>
+        <th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th><th>11</th><th>12</th><th>01</th><th>02</th><th>03</th><th>04</th><th>05</th>
+      </tr>
+      <tr>
+        <td class="name">T1 講師力養成講座 設計・運営</td>
+        <td class="status"><span class="status-badge continue">継続</span></td>
+        <td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">T2 カリキュラム ブラッシュアップ</td>
+        <td class="status"><span class="status-badge continue">継続</span></td>
+        <td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">T3 既存P講師 受講ルート設計</td>
+        <td class="status"><span class="status-badge new">新規</span></td>
+        <td class="cell-design">◆</td><td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">T4 バッジ運用フロー構築</td>
+        <td class="status"><span class="status-badge new">新規</span></td>
+        <td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">T5 受講者→応募導線 ★KR2 本丸</td>
+        <td class="status"><span class="status-badge new">新規</span></td>
+        <td class="cell-design">◆</td><td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-star">★</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">T6 修了者への特別案内・声かけ</td>
+        <td class="status"><span class="status-badge new">新規</span></td>
+        <td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name" style="text-decoration: line-through; color: #94A3B8;">T7 (T6 に統合)</td>
+        <td class="status"><span class="status-badge deleted">削除</span></td>
+        <td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td>
+      </tr>
+      <tr>
+        <td class="name">T8 外販向けパッケージ化</td>
+        <td class="status"><span class="status-badge future">将来</span></td>
+        <td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td><td class="cell-none">—</td>
+      </tr>
+    </table>
+
+    <!-- 軸③ コスト -->
+    <div class="axis-header"><span class="axis-icon axis-c">AXIS C</span><span class="axis-title">コスト (4施策)</span></div>
+    <table class="gantt-table">
+      <tr>
+        <th class="name">施策</th>
+        <th class="status">状態</th>
+        <th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th><th>11</th><th>12</th><th>01</th><th>02</th><th>03</th><th>04</th><th>05</th>
+      </tr>
+      <tr>
+        <td class="name">C1 動画AIレビュー FB</td>
+        <td class="status"><span class="status-badge continue">継続</span></td>
+        <td class="cell-keep">=</td><td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">C2 模擬講義フロー更新 ★コスト主役</td>
+        <td class="status"><span class="status-badge redesign">再設計</span></td>
+        <td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">C3 マスター動画 更新・新規作成</td>
+        <td class="status"><span class="status-badge continue">継続</span></td>
+        <td class="cell-design">◆</td><td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+      <tr>
+        <td class="name">C4 AI採点システム 改修</td>
+        <td class="status"><span class="status-badge repair">改修</span></td>
+        <td class="cell-design">◆</td><td class="cell-design">◆</td><td class="cell-design">◆</td><td class="cell-build">◇</td><td class="cell-build">◇</td><td class="cell-run">●</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td><td class="cell-keep">=</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- SECTION 05 軸① 品質 詳細 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div class="section-title">軸① 品質 — 6 施策の詳細</div>
+    </div>
+    <p class="section-hero-sub">KR1: 明瞭度 4.4 以上率 80%</p>
+
+    <!-- Q1 -->
+    <div class="measure-card axis-q-card">
+      <div class="measure-head">
+        <span class="measure-id">Q1</span>
+        <span class="measure-name">OJT・メンタリング</span>
+        <span class="status-badge new">新規</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>PMG配属後の社内新人の立ち上がりを伴走、戦力化までのリードタイム短縮と品質底上げ</dd>
+          <dt>対象</dt><dd><strong>社内新人のみ</strong> (2026年4月入社組、2026年6月PMG配属)</dd>
+          <dt>関連</dt><dd>コストKPI (社内 40h→30h) / KR1 (品質)</dd>
+          <dt>担当</dt><dd>浦本 (主体・メンター役) / 木下 (FB・壁打ち)</dd>
+          <dt>時間制約</dt><dd>6月配属に向けて<strong>5月中に制度設計を完了</strong>させる必要あり</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05 (◆): 制度設計 — 期間・頻度・到達ゴール・評価方法・FB様式</li>
+          <li>2026-06 (●): PMG配属と同時に運用開始、週次1on1+随時OJT</li>
+          <li>2026-07〜09 (●): 初期サイクル運用、課題を木下にFB依頼、月次調整</li>
+          <li>2026-10 (●→=): 初回サイクル完了、マニュアル化と次年度向け改善</li>
+          <li>2026-11〜 (=): 継続運用、四半期で見直し</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-05末 制度設計完了 / 2026-06頭 運用開始 / 2026-10末 マニュアル化完了</div>
+      <div class="note-box"><span class="tbd">TBD</span> 4月入社者数 (規模) / 育成期間 (60日→45日 KPI との対応) / OJT と メンタリングの担当分け</div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="measure-card axis-q-card">
+      <div class="measure-head">
+        <span class="measure-id">Q2</span>
+        <span class="measure-name">アンケート連動 Slackアラート (2段階閾値)</span>
+        <span class="status-badge new">新規</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>明瞭度スコアおよび定性コメントから要注意シグナルを即時検知、介入可能にする</dd>
+          <dt>対象指標</dt><dd><strong>明瞭度のみ</strong> (満足度はマネジ企画担当のためスコープ外)</dd>
+          <dt>閾値</dt><dd>Tier1 (注意): 4.0〜4.2 / Tier2 (即介入): 4.0 未満</dd>
+          <dt>通知先</dt><dd>育成チーム専用<strong>鍵付きSlackチャネル</strong> (PMG・SDG リーダー陣)</dd>
+          <dt>追加要件</dt><dd>定性コメント分析も含める</dd>
+          <dt>依存</dt><dd>Google Form / MS Forms 基盤 / Zapier 実現性 / Ops企画</dd>
+          <dt>担当</dt><dd>浦本 (要件・運用) / Ops企画 山田さん (技術相談) / 木下 (FB)</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05 (◆): 要件確定、山田さん相談、Zapier 実現可能性検討、Slackチャネル作成</li>
+          <li>2026-06 (◇): Zapier or 内製で実装、ステージング動作確認、定性コメント分析方式検討</li>
+          <li>2026-07 (●): 本番稼働開始、初期チューニング</li>
+          <li>2026-08〜10 (●): 誤検出/見逃し分析、閾値調整、定性コメント分析の精度向上</li>
+          <li>2026-11〜 (=): 月次レビューに組込み</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-07 稼働 / 2026-10末 誤検出率 &lt; 10% / 定性コメント分析の有用性評価</div>
+      <div class="note-box"><span class="tbd">TBD</span> Zapier で定性コメント分析まで実現可能か / Google Form と MS Forms の両対応をどう一元化</div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="measure-card axis-q-card">
+      <div class="measure-head">
+        <span class="measure-id">Q3</span>
+        <span class="measure-name">動画AI 明瞭度ネガティブチェック</span>
+        <span class="status-badge redesign">再設計</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>動画AIで「<strong>明瞭度を下げる行動</strong>」をネガティブチェック、アラートとして使用</dd>
+          <dt>現状</dt><dd>新人講師が任意で使用中。講義全体のクオリティ自己判断ツール (明瞭度寄りではない)</dd>
+          <dt>再設計方針</dt><dd>ポジ評価 → <strong>ネガティブチェック型</strong>。Q6 チェックリストに合わせた評価項目</dd>
+          <dt>依存</dt><dd><strong>Q6 のチェックリスト確定が前提</strong></dd>
+          <dt>担当</dt><dd>浦本 (要件・運用) / CTO室 高橋さん (技術相談)</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05 (◆): 要件整理、現状ツール理解、高橋さん初回相談</li>
+          <li>2026-06 (◆): Q6 と並行設計、ネガティブチェック項目の洗い出し</li>
+          <li>2026-07 (◆→◇): Q6 チェックリスト確定 → AI評価項目に翻訳</li>
+          <li>2026-08〜09 (◇): 実装、ステージング検証、Q2 アラート連携設計</li>
+          <li>2026-10 (●): 本番稼働開始 (新人講師の必須利用化を検討)</li>
+          <li>2026-11〜 (=): 月次評価、誤検出/見逃し改善、既存講師への展開</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-07 評価項目確定 / 2026-10 ネガティブチェック型で本番稼働</div>
+      <div class="note-box"><span class="tbd">TBD</span> C4 (AI採点改修) との統合可能性 / 既存ツール改修 vs 新規構築</div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="measure-card axis-q-card">
+      <div class="measure-head">
+        <span class="measure-id">Q4</span>
+        <span class="measure-name">パフォーマンスチェックシート 更新</span>
+        <span class="status-badge new">新規</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>登壇テスト用の評価基準シートを Q6 チェックリストに沿って再構築</dd>
+          <dt>対象</dt><dd><strong>P講師・社内講師 共通</strong> (登壇テスト時の合否基準)</dd>
+          <dt>既存シート</dt><dd>登壇テスト用、講義の質に特化</dd>
+          <dt>依存</dt><dd><strong>Q6 のチェックリスト確定が前提</strong></dd>
+          <dt>担当</dt><dd>浦本 (運用) / 勇太さん (最終判断)</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05〜06 (◆): Q6 と並行で要件整理、旧シートの評価ポイント抽出</li>
+          <li>2026-07 (◆→◇): Q6 確定 → 新シート設計、勇太さんレビュー</li>
+          <li>2026-08 (◇): 初版作成、勇太さん最終判断</li>
+          <li>2026-09 (●): 試行運用 (Q1 OJT 対象の登壇テストに適用想定)</li>
+          <li>2026-10〜 (=): 標準運用、判定の妥当性調整</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-07 設計確定 / 2026-09 試行運用 / 2026-10 標準化</div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="measure-card axis-q-card">
+      <div class="measure-head">
+        <span class="measure-id">Q5</span>
+        <span class="measure-name">巡回チェックフロー 構築・運用</span>
+        <span class="status-badge new">新規</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>研修現場 (オンライン中心) の品質チェック定常化、アラート対応とベストプラクティス把握</dd>
+          <dt>対象</dt><dd>P講師・社内講師 共通</dd>
+          <dt>巡回場</dt><dd><strong>オンライン研修中心</strong>、オフラインは将来検討</dd>
+          <dt>巡回者</dt><dd>育成チーム基本、状況によりマネジ企画へ要請</dd>
+          <dt>対象決定</dt><dd>Q2 アラート → 巡回対象決定、補足で高明瞭度講師のベストプラクティス巡回</dd>
+          <dt>フロー</dt><dd>Q4 シートに記載 → 本人FB → アンケート結果追跡 → 再アラート時に再対応</dd>
+          <dt>依存</dt><dd>Q2 (2026-07 稼働) と Q4 (2026-07 確定) が前提</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05 (◆): 巡回フロー設計、対象決定ロジック (Q2連動)、巡回者割当、マネジ企画要請ルール</li>
+          <li>2026-06 (◆): Q4 シート確定待ち、結果記録テンプレ準備</li>
+          <li>2026-07 (◆→◇): Q2/Q4 稼働後、パイロット巡回開始 (月1〜2件)</li>
+          <li>2026-08〜09 (◇→●): 巡回拡大、FBサイクル運用、再発追跡開始</li>
+          <li>2026-10 (●): 定常運用 (月2〜3件 + 高明瞭度巡回)</li>
+          <li>2026-11〜 (=): 標準運用、四半期で巡回件数・改善効果レビュー</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-07 パイロット開始 / 2026-10 定常運用 / 2026-12 高明瞭度巡回組込み</div>
+      <div class="info-box">⏳ <strong>長期参照</strong>: 「浮いた 850h を巡回に投下」は 2030年(5年後)時点の想定。本期間中は段階的に拡大</div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="measure-card axis-q-card" style="border-left-width: 6px;">
+      <div class="measure-head">
+        <span class="measure-id">Q6</span>
+        <span class="measure-name">チェックリスト策定・運用フロー構築 <span class="measure-star">★ハブ施策</span></span>
+        <span class="status-badge new">新規</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>明瞭度を中心とする、自己チェック可能な粒度の評価シート。<strong>Q3/Q4/C4 すべての元になるハブ施策</strong></dd>
+          <dt>対象</dt><dd>P講師・社内講師 共通</dd>
+          <dt>形式</dt><dd><strong>各項目を 1〜5 の5段階評価 + 各項目に例</strong> を記載 (NG列挙ではない)</dd>
+          <dt>重点</dt><dd>明瞭度に関する項目を多く配置</dd>
+          <dt>使い分け</dt><dd>Q3 / Q4 / C4 すべてで同じチェックリストを使用 (バージョン分けなし)</dd>
+          <dt>ソース資料</dt><dd>講師力養成講座資料 (現在設計中) / 現運用のパフォーマンスチェックシート</dd>
+          <dt>担当</dt><dd>浦本 (作成) / 勇太さん (最終判断)</dd>
+          <dt>期限</dt><dd><strong>2026-06 末 確定 ★</strong> (Q3/Q4/C4 の前提条件)</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05 (◆): ソース資料整理、項目候補リスト、カテゴリ分け</li>
+          <li>2026-06 (◆→◇): 5段階評価項目 + 例を埋めて初版作成、勇太さん最終判断、<strong>6月末確定 ★</strong></li>
+          <li>2026-07 (●): Q3/Q4/C4 への引き渡し、自己チェック運用も開始</li>
+          <li>2026-08〜09 (●): 試行運用、項目調整</li>
+          <li>2026-10〜 (=): 標準運用</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 <strong>2026-06 末 確定 ★</strong> / 2026-10 標準運用</div>
+      <div class="note-box"><span class="tbd">TBD</span> 講師力養成講座資料の確定タイミング (Q6 の入力が遅れると後続施策全部ズレる)</div>
+    </div>
+  </div>
+
+  <!-- SECTION 06 軸② 講師力養成講座活用 詳細 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div class="section-title">軸② 講師力養成講座活用 — 7 施策の詳細 (T7 統合 / T8 将来検討)</div>
+    </div>
+    <p class="section-hero-sub">KR2: 講師力養成講座 経由の P講師採用 <strong>2026年中 10名 ★</strong></p>
+
+    <!-- T1 -->
+    <div class="measure-card axis-t-card">
+      <div class="measure-head">
+        <span class="measure-id">T1</span>
+        <span class="measure-name">講師力養成講座 設計・運営</span>
+        <span class="status-badge continue">継続</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>講師力養成講座 (設計済) の継続運営、改善フェーズ</dd>
+          <dt>状態</dt><dd>設計済、ここからは改善フェーズ</dd>
+          <dt>担当</dt><dd>育成チーム (浦本主体)</dd>
+          <dt>要検討</dt><dd>各期の開催スケジュール / 改善トピック優先度 / 受講者数目標</dd>
+        </dl>
+      </div>
+      <div class="note-box"><span class="tbd">TBD</span> 各期の開催スケジュール (別タスクで詳細化) / 受講者数目標</div>
+    </div>
+
+    <!-- T2 -->
+    <div class="measure-card axis-t-card">
+      <div class="measure-head">
+        <span class="measure-id">T2</span>
+        <span class="measure-name">カリキュラム ブラッシュアップ</span>
+        <span class="status-badge continue">継続</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>初版運用後のFBを集約し、カリキュラム全方位 (構成・演習・評価方法・動画教材・講師陣ナレッジ) を改善</dd>
+          <dt>状態</dt><dd><strong>初版運用中 (試行フェーズ)</strong>、改善着手は初版終了後</dd>
+          <dt>改定頻度</dt><dd><strong>固定しない</strong>、必要を感じたタイミングで実施</dd>
+          <dt>担当</dt><dd>浦本 (主体) / 勇太さん (FB)</dd>
+          <dt>Q6 連動</dt><dd>なし (Q6 とは独立)</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05〜 (=): 初版運用継続、受講者・登壇現場FBの蓄積</li>
+          <li>初版終了後 (◆→◇→●): FB整理、改善トピック洗い出し、必要に応じて改善版リリース</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 初版終了後に改善着手開始</div>
+      <div class="note-box"><span class="tbd">TBD</span> 初版終了タイミング (T1 開催スケジュール詳細化と連動)</div>
+    </div>
+
+    <!-- T3 -->
+    <div class="measure-card axis-t-card">
+      <div class="measure-head">
+        <span class="measure-id">T3</span>
+        <span class="measure-name">既存P講師の 講師力養成講座 受講ルート設計</span>
+        <span class="status-badge new">新規</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>既存P講師に講師力養成講座を受講させる仕組みを構築</dd>
+          <dt>対象</dt><dd>既存P講師 <strong>全員</strong> (現状58名)</dd>
+          <dt>タイミング</dt><dd>T2 (カリキュラム改善) と並行</dd>
+          <dt>担当</dt><dd>浦本 (主体) / 勇太さん (FB)</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05〜06 (◆): 受講ルート方針 (必修・任意・条件付き)、受講順序、目標受講数</li>
+          <li>2026-07 (◆→◇): 案内・申込フロー設計、対象者リスト化</li>
+          <li>2026-08 (◇): 案内開始</li>
+          <li>2026-09〜10 (●): 先行受講開始</li>
+          <li>2026-11〜 (=): 標準運用</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-07 ルート方針確定 / 2026-10 第一陣受講開始</div>
+      <div class="note-box"><span class="tbd">TBD</span> 受講ルート方針 (必修/任意/条件付き) / 受講順序 / 目標受講完了率</div>
+    </div>
+
+    <!-- T4 -->
+    <div class="measure-card axis-t-card">
+      <div class="measure-head">
+        <span class="measure-id">T4</span>
+        <span class="measure-name">バッジ運用フロー構築</span>
+        <span class="status-badge new">新規</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>講師力養成講座 修了をバッジで可視化、内部評価および採用導線にも接続</dd>
+          <dt>状態</dt><dd>バッジ制度方針は決定、<strong>種類・名称・段階分けは未決定</strong></dd>
+          <dt>付与基準</dt><dd>講師力養成講座 修了 (シンプル基準)</dd>
+          <dt>可視化先</dt><dd><strong>登壇Zoom背景 / トレーニングポータル</strong></dd>
+          <dt>担当</dt><dd>育成チーム (浦本主体)</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05 (◆): バッジ種類・段階設計、Zoom背景デザイン、トレポータル仕様</li>
+          <li>2026-06 (◇): バッジビジュアル制作、ポータル組込み、運用フロー確立</li>
+          <li>2026-07 (●): 講師力養成講座 修了者から運用開始</li>
+          <li>2026-08〜 (=): 継続運用、参考指標を月次トラック</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-06 仕様確定 / 2026-07 運用開始</div>
+      <div class="note-box"><span class="tbd">TBD</span> バッジの種類・段階分け・名称</div>
+    </div>
+
+    <!-- T5 -->
+    <div class="measure-card axis-t-card" style="border-left-width: 6px;">
+      <div class="measure-head">
+        <span class="measure-id">T5</span>
+        <span class="measure-name">講師力養成講座 受講者 → 応募導線設計 <span class="measure-star">★最重要 KR2 ドライバ</span></span>
+        <span class="status-badge new">新規</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>講座受講 (外部含む) → 興味喚起 → 応募の導線。<strong>KR2 (年10名採用) の本丸</strong></dd>
+          <dt>対象</dt><dd>内部 (社内講師) + 外部 (一般応募者) 共通 (講義内容は同一)</dd>
+          <dt>公開</dt><dd>決定済、時期は未定</dd>
+          <dt>公開チャネル</dt><dd>スクール連動 or 単体講義 (<strong>検討中</strong>)</dd>
+          <dt>応募導線出口</dt><dd>既存採用フローに乗せる (書類選考判定基準も既存と同一)</dd>
+          <dt>担当</dt><dd>浦本 (主導) / マネジ企画 (応募フロー連携) / マーケ・SNS (TBD)</dd>
+          <dt>時間制約</dt><dd><strong>2026年中に累計10名達成 ★ (月平均 1.4名)</strong></dd>
+        </dl>
+      </div>
+      <div class="warn-box">
+        <strong>採用ペース根拠</strong> (HANDOFF 数値より試算)<br>
+        入社10名 → 書類選考25名 (TTT経由入社率40%想定) → 応募75名 (応募→書類選考率33%、過去実績) → 講師力養成講座 受講者 多数 (受講→応募率は TBD)
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン (アグレッシブ前倒し)</div>
+        <ul>
+          <li>2026-05 (◆): 採用ファネル設計、公開チャネル選定、マーケ担当決定</li>
+          <li>2026-06 (◆→◇): 外部公開戦略、応募導線 UI/メッセージ、LP実装着手</li>
+          <li>2026-07 (◇→●): 公開・応募受付開始、マネジ企画と連携</li>
+          <li>2026-08〜11 (●): 採用ファネル稼働、月次採用数追跡</li>
+          <li>2026-12 (●→★): <strong>累計10名達成 ★ (KR2 達成)</strong></li>
+          <li>2027-01〜 (=): 翌年度ペース継続</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-07 公開・応募受付開始 / <strong>2026-12 累計10名達成 ★</strong></div>
+      <div class="note-box"><span class="tbd">TBD</span> 公開チャネル / マーケ・SNS担当 / 公開時期 / 受講→応募率の見立て / ペース未達時のリカバリ方針</div>
+    </div>
+
+    <!-- T6 -->
+    <div class="measure-card axis-t-card">
+      <div class="measure-head">
+        <span class="measure-id">T6</span>
+        <span class="measure-name">修了者への特別案内・声かけ (元 T6+T7 統合)</span>
+        <span class="status-badge new">新規</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>講座修了者 (外部) 全員に対して、修了タイミングで採用案内を届ける</dd>
+          <dt>対象</dt><dd><strong>外部修了者のみ</strong> (内部講師・既存P講師は採用対象外)</dd>
+          <dt>方針</dt><dd>メール案内 + 修了プログラム内での声かけ を一体運用</dd>
+          <dt>タイミング</dt><dd>T5 と同時進行</dd>
+          <dt>応募後</dt><dd>既存採用フローに合流</dd>
+          <dt>担当</dt><dd>浦本 (主体) / マネジ企画 (連携)</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05 (◆): 案内方針 (内容・タイミング・媒体・声かけ文言)、修了者リスト化フロー、T5 連動設計</li>
+          <li>2026-06 (◇): 案内テンプレ、修了プログラム組込み、初回送付準備</li>
+          <li>2026-07 (●): 初回案内開始</li>
+          <li>2026-08〜 (=): 月次運用、応募率追跡</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-07 初回案内 / 2026-12 採用達成 (T5 と連動)</div>
+      <div class="note-box"><span class="tbd">TBD</span> 規模感 (月何件) / 応募率目標</div>
+    </div>
+
+    <!-- T7 deleted -->
+    <div class="measure-card deleted">
+      <div class="measure-head">
+        <span class="measure-id">T7</span>
+        <span class="measure-name" style="text-decoration: line-through;">講師力養成講座 採用案内 (修了時声かけ)</span>
+        <span class="status-badge deleted">削除</span>
+      </div>
+      <div class="measure-meta">
+        <p>T6 と統合済み (2026-05-20 統合判断)。施策総数は 18→17 に。</p>
+      </div>
+    </div>
+
+    <!-- T8 -->
+    <div class="measure-card axis-t-card">
+      <div class="measure-head">
+        <span class="measure-id">T8</span>
+        <span class="measure-name">外販向け 講師力養成講座 パッケージ化</span>
+        <span class="status-badge future">将来検討</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>位置づけ</dt><dd><strong>将来実施 (本期間スコープ外)</strong>。詳細はまるっきり検討中</dd>
+          <dt>本期間アクション</dt><dd>基本的に着手しない、情報収集のみ</dd>
+          <dt>本格検討</dt><dd>木下復帰後 (2027-05〜) または別途必要性が生じたタイミング</dd>
+        </dl>
+      </div>
+      <div class="note-box"><span class="tbd">TBD</span> 担当・パッケージ要件・契約形態・パイロット先・スケジュール一切 (将来確定)</div>
+    </div>
+  </div>
+
+  <!-- SECTION 07 軸③ コスト 詳細 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">07</div>
+      <div class="section-title">軸③ コスト — 4 施策の詳細</div>
+    </div>
+    <p class="section-hero-sub">コストKPI: 育成工数 社内 40h→30h / P 7h→3.5h</p>
+
+    <!-- C1 -->
+    <div class="measure-card axis-c-card">
+      <div class="measure-head">
+        <span class="measure-id">C1</span>
+        <span class="measure-name">動画AIレビュー FB</span>
+        <span class="status-badge continue">継続+調整</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>動画AIで模擬講義への FB を提供 (内容コーチング)</dd>
+          <dt>対象</dt><dd>新人講師 (社内・P 両方)</dd>
+          <dt>状態</dt><dd><strong>稼働中</strong>、ただし FB がやや甘く調整必要</dd>
+          <dt>Q3 との違い</dt><dd>C1 = 内容コーチング目的 / Q3 = 明瞭度ネガティブチェック (アラート)</dd>
+          <dt>担当</dt><dd><strong>育成チーム (企画) / 高橋さん (実装)</strong></dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05〜 (=): 継続運用</li>
+          <li>2026-06〜07 (◆→◇): FB 甘さの調整、高橋さんと実装相談</li>
+          <li>2026-08〜 (=): 継続運用、調整後の精度評価</li>
+          <li>Q6 確定後 (将来): Q6 連動検討</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-07 調整完了 / Q6 完成後の連動検討</div>
+    </div>
+
+    <!-- C2 -->
+    <div class="measure-card axis-c-card" style="border-left-width: 6px;">
+      <div class="measure-head">
+        <span class="measure-id">C2</span>
+        <span class="measure-name">模擬講義実施フロー 更新 <span class="measure-star">★コスト軸 主役</span></span>
+        <span class="status-badge redesign">再設計</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>模擬講義の対面回数を AI で代替、<strong>コストKPI (P 7h→3.5h) の主要ドライバ</strong></dd>
+          <dt>対象</dt><dd>P講師・社内講師 両方</dd>
+          <dt>P講師 新フロー</dt><dd>初回 (対面) + AI (複数回) + 登壇テスト (対面) の3段階。再テスト率 5人に1人 → <strong>合計 2.2回/人</strong> (元 4.5回から ▲2.3回)</dd>
+          <dt>社内講師</dt><dd>登壇テスト前の育成期間中に使用 (Q1 OJT では模擬講義しない)</dd>
+          <dt>連携</dt><dd><strong>C4 (AI採点) と合わせる</strong> (模擬講義評価はC4)</dd>
+          <dt>担当</dt><dd>浦本 (主導) / 勇太さん (FB)</dd>
+          <dt>時間制約</dt><dd>P講師新人入社タイミングまでに整える、早めに着手</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05 (◆): 新フロー設計 (3段階)、社内講師向け活用設計</li>
+          <li>2026-06 (◆→◇): 詳細設計、C4 と歩調合わせ、運用フロー文書化</li>
+          <li>2026-07 (◇→●): P講師入社想定、新フロー試行開始</li>
+          <li>2026-08〜09 (●): 全体展開、社内講師の育成期間中の運用開始</li>
+          <li>2026-10〜 (=): 工数実測、▲25% 達成確認</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-06 設計完了 / 2026-07 試行開始 / 2026-09 全体展開 / 2026-12 P講師工数 ▲25% 想定</div>
+      <div class="note-box"><span class="tbd">TBD</span> P講師の新人入社タイミング</div>
+    </div>
+
+    <!-- C3 -->
+    <div class="measure-card axis-c-card">
+      <div class="measure-head">
+        <span class="measure-id">C3</span>
+        <span class="measure-name">マスター動画 更新・新規作成</span>
+        <span class="status-badge continue">継続+追加</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>キカガク講師としての講義ポイントをまとめた動画 (字幕付き) を整備</dd>
+          <dt>対象</dt><dd>P講師・社内講師 両方</dd>
+          <dt>現状</dt><dd>1本あり</dd>
+          <dt>目標</dt><dd><strong>全体で2本</strong> (Biz領域 追加で 1+1 = 2本体制)</dd>
+          <dt>作業</dt><dd>Biz領域 新規作成 + 既存動画の更新・差し替え</dd>
+          <dt>担当</dt><dd>浦本 (育成チーム代表)</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05〜06 (◆): Biz領域動画の企画・構成 (講義ポイント整理)</li>
+          <li>2026-07〜08 (◇): 撮影・編集</li>
+          <li>2026-09 (●): リリース</li>
+          <li>2026-10〜 (=): 既存動画の更新検討、運用継続</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-09 Biz領域動画リリース</div>
+    </div>
+
+    <!-- C4 -->
+    <div class="measure-card axis-c-card">
+      <div class="measure-head">
+        <span class="measure-id">C4</span>
+        <span class="measure-name">AI採点システム 改修</span>
+        <span class="status-badge repair">改修</span>
+      </div>
+      <div class="measure-meta">
+        <dl>
+          <dt>目的</dt><dd>新人講師の登壇テスト向け自己練習用AI採点ツールを、Q6 チェックリストに合わせて改修</dd>
+          <dt>対象</dt><dd>新人講師 (登壇テスト前の自己練習)</dd>
+          <dt>現状</dt><dd><strong>既存ツールあり</strong>。点数付けが甘く、新チェックリストに沿った採点に揃わない</dd>
+          <dt>改修ポイント</dt><dd>採点項目見直し、厳格化、再設計</dd>
+          <dt>依存</dt><dd><strong>Q6 のチェックリスト確定が前提</strong></dd>
+          <dt>担当</dt><dd>浦本 (要件・運用) / 技術相談先 TBD</dd>
+        </dl>
+      </div>
+      <div class="measure-plan">
+        <div class="measure-plan-title">月次プラン</div>
+        <ul>
+          <li>2026-05〜06 (◆): 現状ツール棚卸し、改修要件整理、Q6 と歩調合わせ</li>
+          <li>2026-07 (◆→◇): 採点項目の更新設計、ロジック変更案</li>
+          <li>2026-08〜09 (◇): 実装、ステージングテスト</li>
+          <li>2026-10 (●): 改修版稼働開始</li>
+          <li>2026-11〜 (=): 継続運用、精度評価</li>
+        </ul>
+      </div>
+      <div class="measure-milestone">🎯 2026-07 改修項目確定 / 2026-10 改修版稼働</div>
+      <div class="note-box"><span class="tbd">TBD</span> 技術担当 / 既存ツールの開発・運用主体 / Q3 との統合可能性</div>
+    </div>
+  </div>
+
+  <!-- SECTION 08 リスク・依存 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">08</div>
+      <div class="section-title">リスク・依存関係まとめ</div>
+    </div>
+
+    <table>
+      <tr><th style="width: 32%;">リスク/依存</th><th style="width: 28%;">影響範囲</th><th>緩和策</th></tr>
+      <tr><td>エンジニア助力の確保 (Q2/C4/T5)</td><td>Slackアラート / AI採点 / 応募導線</td><td>Q2早期に勇太さん相談 + Ops企画(山田さん)、必要なら駿さんへエスカレーション</td></tr>
+      <tr><td>マネジ企画との連携密度 (T5/T6)</td><td>講師力養成講座 採用導線全体</td><td>朝会/夕会を活用、配信前にレビュー依頼</td></tr>
+      <tr><td>講師力養成講座 外部告知の戦略 (T5)</td><td>KR2 達成度に直結</td><td>マーケ/SNS連携の戦略を Q2 中に固める</td></tr>
+      <tr><td>ベースライン計測の遅延</td><td>KR数値確定・施策評価</td><td>Q2中の早期着手、計測手段を5月中に決定</td></tr>
+      <tr><td>育休復帰タイミングの不確定性</td><td>2027下期戦略</td><td>Q4に復帰前提の引き継ぎを開始</td></tr>
+      <tr><td>Q6 (チェックリスト) の遅延</td><td>Q3/Q4/C4 すべて後ろ倒し</td><td>5月設計フェーズで優先実行、6月末厳守</td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 09 報告版構成案 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">09</div>
+      <div class="section-title">報告版 (B版) の構成案</div>
+    </div>
+    <p class="section-hero-sub">将来駿さんへ提示する四半期ベース報告版を作る際の抽出ポリシー。まずは勇太さんレビュー対象。</p>
+
+    <ol style="padding-left: 22px; font-size: 13px; line-height: 1.8;">
+      <li>全体マイルストーン表 → そのまま掲載</li>
+      <li>月次ロードマップ → <strong>四半期にまとめる</strong> (Q2/Q3/Q4/Q1 の4列)</li>
+      <li>軸別詳細 → 各施策1〜2行に圧縮、依存と担当だけ残す</li>
+      <li>リスク → そのまま掲載</li>
+      <li>数値目標 → 戦略doc側のKR/KPIをそのまま引用</li>
+    </ol>
+
+    <div class="info-box">
+      想定ファイル名: <code>strategy/ikusei-implementation-report-2026Q2.md</code> (四半期ごとに更新版)
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <span>育成チーム 施策実行スケジュール v0.1 — 2026 / Generated with Claude Code</span>
+  <span>キカガク PMG Group</span>
+</div>
+
+</body>
+</html>
