@@ -63,6 +63,10 @@
   .kpi-label { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; color: var(--text-sub); margin-bottom: 8px; text-transform: uppercase; }
   .kpi-value { font-family: 'Inter', sans-serif; font-size: 32px; font-weight: 700; color: var(--text); line-height: 1; }
   .kpi-value .unit { font-size: 14px; font-weight: 500; color: var(--text-sub); margin-left: 4px; }
+  .kpi-value-pair { font-family: 'Inter', sans-serif; font-weight: 700; color: var(--text); line-height: 1.4; }
+  .kpi-value-pair > div { display: flex; align-items: baseline; gap: 8px; }
+  .kpi-value-pair .lbl { font-size: 10px; font-weight: 700; color: var(--text-sub); letter-spacing: 0.1em; min-width: 28px; font-family: 'Noto Sans JP', sans-serif; }
+  .kpi-value-pair .val { font-size: 18px; }
   .kpi-deadline { font-size: 11px; color: var(--text-sub); margin-top: 6px; }
 
   /* ガント */
@@ -160,20 +164,23 @@
 
   <!-- KPI -->
   <div class="kpi-strip">
+    <div class="kpi-card purple">
+      <div class="kpi-label">KR1 品質</div>
+      <div class="kpi-value">80<span class="unit">%</span></div>
+      <div class="kpi-deadline">明瞭度 4.4 以上率</div>
+    </div>
     <div class="kpi-card teal">
-      <div class="kpi-label">KR2 採用目標</div>
+      <div class="kpi-label">KR2 採用</div>
       <div class="kpi-value">10<span class="unit">名</span></div>
       <div class="kpi-deadline">講師力養成講座 経由 / by 2026-12 ★</div>
     </div>
-    <div class="kpi-card purple">
-      <div class="kpi-label">チェックリスト確定</div>
-      <div class="kpi-value">06<span class="unit">月末</span></div>
-      <div class="kpi-deadline">他施策の前提となるハブ ★</div>
-    </div>
     <div class="kpi-card pink">
-      <div class="kpi-label">育成工数 削減目標</div>
-      <div class="kpi-value">▲25<span class="unit">%</span></div>
-      <div class="kpi-deadline">P講師 7h→3.5h / by 2026-12</div>
+      <div class="kpi-label">最重要 KPI 育成工数</div>
+      <div class="kpi-value-pair">
+        <div><span class="lbl">社内</span><span class="val">40h → 30h</span></div>
+        <div><span class="lbl">P</span><span class="val">7h → 3.5h</span></div>
+      </div>
+      <div class="kpi-deadline">1 人あたり / by 2026-12</div>
     </div>
   </div>
 
