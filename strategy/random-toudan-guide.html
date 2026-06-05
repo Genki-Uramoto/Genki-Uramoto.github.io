@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ランダム・登壇テストの進め方（新人向けガイド）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #28008C;
+    --blue-light: #EEEBFA;
+    --blue-mid: #C7BCEA;
+    --purple: #7C3AED;
+    --purple-light: #F5F3FF;
+    --purple-mid: #DDD6FE;
+    --sky: #0EA5E9;
+    --sky-light: #F0F9FF;
+    --sky-mid: #BAE6FD;
+    --status-redesign: #9F1239;
+    --status-redesign-light: #FFF1F2;
+    --status-redesign-mid: #FECDD3;
+    --status-new: #4F46E5;
+    --status-new-light: #EEF2FF;
+    --status-new-mid: #C7D2FE;
+    --green: #047857;
+    --green-light: #ECFDF5;
+    --green-mid: #A7F3D0;
+    --yellow: #CA8A04;
+    --yellow-light: #FEFCE8;
+    --yellow-mid: #FEF08A;
+    --text: #111827;
+    --dark-bg: #3730A3;
+    --text-sub: #6B7280;
+    --border: #E5E7EB;
+    --white: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    background: #FAFAFA;
+  }
+
+  /* ヘッダー */
+  .doc-header {
+    background: var(--dark-bg);
+    color: white;
+    padding: 48px 64px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .doc-header::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 300px; height: 100%;
+    background: linear-gradient(135deg, transparent 50%, rgba(55,138,221,0.15) 50%);
+  }
+  .doc-header .badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+  .doc-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .doc-header .slogan-ja {
+    font-size: 14px;
+    font-weight: 300;
+    color: #C7D2FE;
+    margin-bottom: 24px;
+  }
+  .doc-header .meta {
+    display: flex;
+    gap: 24px;
+    font-size: 12px;
+    color: #9CA3AF;
+    font-family: 'Inter', sans-serif;
+    flex-wrap: wrap;
+  }
+  .doc-header .meta span { display: flex; align-items: center; gap: 6px; }
+
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  .section {
+    margin-top: 32px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--blue);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .subsection { margin-top: 28px; }
+  .subsection-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-left: 10px;
+    border-left: 3px solid var(--blue);
+  }
+
+  p + p { margin-top: 10px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  th {
+    background: var(--blue-light);
+    color: var(--blue);
+    font-weight: 700;
+    text-align: left;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+  }
+  td {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .status-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .status-badge.must { background: var(--status-redesign-light); color: var(--status-redesign); border: 1px solid var(--status-redesign-mid); }
+  .status-badge.opt  { background: var(--status-new-light); color: var(--status-new); border: 1px solid var(--status-new-mid); }
+  .status-badge.mentor { background: var(--green-light); color: var(--green); border: 1px solid var(--green-mid); }
+
+  .info-box {
+    background: var(--sky-light);
+    border: 1px solid var(--sky-mid);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-top: 14px;
+    font-size: 13px;
+  }
+  .note-box {
+    background: var(--yellow-light);
+    border: 1px solid var(--yellow-mid);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-top: 14px;
+    font-size: 13px;
+  }
+  .info-box strong, .note-box strong { color: var(--text); }
+
+  /* 対比カード（手書き ⇄ 実装） */
+  .pair {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .pair-card {
+    flex: 1;
+    min-width: 160px;
+    border: 1px solid var(--purple-mid);
+    background: var(--purple-light);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .pair-card .label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.08em; }
+  .pair-card .val { font-size: 15px; font-weight: 700; margin-top: 4px; }
+  .pair-eq {
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--purple);
+  }
+
+  /* メンバーグループ */
+  .group-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-top: 16px;
+  }
+  .group-card.must { border-left: 4px solid var(--status-redesign); }
+  .group-card.opt  { border-left: 4px solid var(--status-new); }
+  .group-card.mentor { border-left: 4px solid var(--green); }
+  .group-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .group-card p.desc { font-size: 12.5px; color: var(--text-sub); margin-bottom: 10px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .chip {
+    display: inline-block;
+    background: var(--blue-light);
+    color: var(--blue);
+    border: 1px solid var(--blue-mid);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  .chip.avoid {
+    background: #FFF1F2;
+    color: var(--status-redesign);
+    border-color: var(--status-redesign-mid);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+
+  /* フロー図 */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    flex: 1;
+    min-width: 130px;
+    background: var(--purple-light);
+    border: 1px solid var(--purple-mid);
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+    font-size: 12px;
+    position: relative;
+  }
+  .flow-step strong { display: block; font-size: 13px; color: var(--purple); margin-bottom: 4px; }
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    color: var(--text-sub);
+    font-weight: 700;
+  }
+
+  ul.point-list { list-style: none; margin-top: 4px; }
+  ul.point-list li {
+    padding: 10px 0 10px 28px;
+    border-bottom: 1px dashed var(--border);
+    position: relative;
+    font-size: 13.5px;
+  }
+  ul.point-list li:last-child { border-bottom: none; }
+  ul.point-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 18px;
+    height: 18px;
+    background: var(--blue);
+    color: white;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ref-link {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 14px;
+  }
+  .ref-link a { color: var(--blue); }
+
+  @media print {
+    body { background: white; }
+    .section { box-shadow: none; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+  <span class="badge">FOR NEW MEMBERS — TRAINING</span>
+  <h1>ランダム・登壇テストの進め方ガイド</h1>
+  <p class="slogan-ja">2 か月目に入るみなさんへ — 範囲のルールと「誰に見てもらうか」のまとめ</p>
+  <div class="meta">
+    <span>📅 2026-06-05</span>
+    <span>📤 PMG Group 育成チーム — 浦本絃希</span>
+    <span>👥 宛先: 新入社員（5 月入社組ほか）</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- 00 はじめに -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">0</span>
+      <span class="section-title">このガイドについて</span>
+    </div>
+    <p>
+      ランダム（抜き打ちの練習）と登壇テストの<strong>進め方が一部アップデート</strong>されました。
+      みなさんが迷わず準備・依頼できるように、<strong>① 出題範囲のルール</strong>と
+      <strong>② 2 か月目に「誰に見てもらうか」</strong>をこのページにまとめています。
+      困ったときはこのページに戻ってきてください。
+    </p>
+  </section>
+
+  <!-- 01 範囲のルール -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">1</span>
+      <span class="section-title">出題範囲のルール</span>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">手書きと実装は「同じ範囲」で揃える</div>
+      <p>
+        ランダムでは、<strong>手書きと実装の出題範囲をそろえて</strong>実施します。
+        バラバラの単元が出ることはありません。
+      </p>
+      <div class="pair">
+        <div class="pair-card">
+          <div class="label">手書き</div>
+          <div class="val">決定木</div>
+        </div>
+        <div class="pair-eq">＝</div>
+        <div class="pair-card">
+          <div class="label">実装</div>
+          <div class="val">決定木</div>
+        </div>
+      </div>
+      <p style="margin-top:12px; font-size:12.5px; color:var(--text-sub);">
+        ↑ 例：手書きが「決定木」なら、実装も「決定木」。テーマは必ずペアになります。
+      </p>
+      <div class="info-box">
+        <strong>登壇テストも同じ</strong>です。手書き／実装で扱う範囲は揃えて出題されます。
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">範囲は「実施 10 分前」に伝えます</div>
+      <p>
+        出題範囲は、<strong>実施の 10 分前にお伝えします</strong>（これまでどおり継続）。
+        直前に範囲が分かる前提で、日頃から幅広く準備しておきましょう。
+      </p>
+      <div class="flow">
+        <div class="flow-step"><strong>10 分前</strong>範囲を伝達</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>準備</strong>手書き・実装<br>（同一範囲）</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>実施</strong>ランダム /<br>登壇テスト</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>FB</strong>担当者から<br>フィードバック</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 誰に見てもらうか -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">2</span>
+      <span class="section-title">2 か月目：誰に見てもらうか</span>
+    </div>
+
+    <p>
+      2 か月目のランダムは、<strong>下記 3 つのグループを組み合わせて</strong>依頼してください。
+      メンターチーム以外の視点からの FB は、<strong>リーダー陣＋杉田さんとの模擬講義</strong>でしっかり確保します。
+    </p>
+    <div class="note-box">
+      ⚠️ <strong>現場メンバーへ個別に好きなように依頼するのは、いったんストップ</strong>です。
+      工数の観点と育成の観点から、依頼先は下記の 3 グループに集約しています。
+    </div>
+
+    <!-- グループ① メンターチーム -->
+    <div class="group-card mentor">
+      <h3><span class="status-badge mentor">グループ ①</span>メンターチーム</h3>
+      <p class="desc">普段の育成を担当するメンバー。基本の依頼先です。</p>
+      <div class="chips">
+        <span class="chip">沖廣さん</span>
+        <span class="chip">村上さん</span>
+        <span class="chip">歳森さん</span>
+        <span class="chip">浦本</span>
+      </div>
+      <p style="margin-top:8px; font-size:12px; color:var(--text-sub);">※ 5 月入社組のメンターチーム構成</p>
+    </div>
+
+    <!-- グループ② リーダー陣 -->
+    <div class="group-card opt">
+      <h3><span class="status-badge opt">グループ ②</span>リーダー陣（入社要件の獲得）</h3>
+      <p class="desc">入社要件の獲得を目的に依頼します。<strong>このグループの中から合計 4 回</strong>が目安です（1 人あたりではありません）。</p>
+      <div class="chips">
+        <span class="chip">小林さん</span>
+        <span class="chip">駿さん</span>
+        <span class="chip">重本さん</span>
+        <span class="chip">勇太さん</span>
+        <span class="chip">四方田さん</span>
+        <span class="chip">有吉さん</span>
+        <span class="chip">村上さん</span>
+        <span class="chip avoid">戸巻さん</span>
+        <span class="chip avoid">岡野さん</span>
+      </div>
+      <div class="note-box">
+        🔑 <strong>依頼には「エルダーの許可」が前提</strong>です。
+        エルダーから許可がおりてはじめて、リーダー陣に依頼できるようになります。
+        まずはエルダーに確認してください。
+      </div>
+      <div class="info-box">
+        <strong>戸巻さん・岡野さんは登壇テスト担当</strong>のため、ランダムの依頼先としては<strong>できるだけ避けて</strong>ください。
+      </div>
+    </div>
+
+    <!-- グループ③ 杉田さん -->
+    <div class="group-card must">
+      <h3><span class="status-badge must">グループ ③</span>杉田さん（必須）</h3>
+      <p class="desc">2 か月目で<strong>必ず</strong>依頼するメンバーです（ご本人に了承いただき済み）。</p>
+      <div class="chips">
+        <span class="chip">杉田さん</span>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">早見表</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%;">グループ</th>
+            <th style="width:18%;">扱い</th>
+            <th>メンバー / 目安</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>① メンターチーム</td>
+            <td>基本</td>
+            <td>沖廣さん・村上さん・歳森さん・浦本</td>
+          </tr>
+          <tr>
+            <td>② リーダー陣</td>
+            <td>合計 4 回目安</td>
+            <td>小林さん・駿さん・重本さん・勇太さん・四方田さん・有吉さん・村上さん<br><span style="color:var(--status-redesign);">（戸巻さん・岡野さんは登壇テスト担当のため極力避ける）</span></td>
+          </tr>
+          <tr>
+            <td>③ 杉田さん</td>
+            <td><strong>必須</strong></td>
+            <td>杉田さん（了承済み）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 03 特定の人に見てもらいたいとき -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">3</span>
+      <span class="section-title">「この人に見てもらいたい！」があるとき</span>
+    </div>
+    <p>
+      上の 3 グループ以外で、<strong>「○○さんに見てもらいたい！」という希望</strong>が出てきたら遠慮なく相談してください。
+      ただし<strong>工数の申請が必要</strong>になるため、自分で直接依頼せず、次の流れでお願いします。
+    </p>
+    <ul class="point-list">
+      <li>見てもらいたい人と、その理由をはっきりさせる</li>
+      <li><strong>浦本にメンションして連絡</strong>する（Slack でOK）</li>
+      <li>工数を申請・調整したうえで、依頼可否をお返しします</li>
+    </ul>
+    <div class="info-box">
+      💡 まずは<strong>浦本メンション</strong>。直接現場に依頼しないようご注意ください。
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
