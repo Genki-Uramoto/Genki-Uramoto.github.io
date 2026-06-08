@@ -284,10 +284,55 @@
   @media print {
     body { background: white; }
     .section { box-shadow: none; break-inside: avoid; }
+    #editbar { display: none !important; }
   }
+
+  /* ===== In-page editor (shown only on #edit) ===== */
+  #editbar {
+    display: none;
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 9999;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(17,24,39,0.16);
+    padding: 8px 12px;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    font-size: 12px;
+  }
+  #editbar.visible { display: flex; }
+  #editbar #editbar-status { color: var(--text-sub); min-width: 92px; }
+  #editbar button {
+    font: inherit;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 6px 12px;
+    transition: all 0.15s;
+  }
+  #editbar button:hover { background: var(--purple-light); }
+  #editbar #btn-save { background: var(--purple); color: var(--white); border-color: var(--purple); }
+  #editbar #btn-save:hover { filter: brightness(1.08); }
+  #editbar #btn-token { padding: 6px 10px; }
+  body.edit-mode .doc-header,
+  body.edit-mode .container { outline: 2px dashed var(--purple-mid); outline-offset: 4px; }
+  [contenteditable="true"]:focus { outline: 2px solid var(--purple); outline-offset: 2px; border-radius: 4px; }
 </style>
 </head>
 <body>
+
+<div id="editbar">
+  <span id="editbar-status">閲覧モード</span>
+  <button id="btn-toggle" type="button">編集モード</button>
+  <button id="btn-save" type="button">保存</button>
+  <button id="btn-token" type="button" title="GitHub トークンを再設定">🔑</button>
+</div>
 
 <header class="doc-header">
   <span class="badge">技術相談 — KICKOFF</span>
@@ -403,5 +448,102 @@
   </section>
 
 </div>
+
+<script>
+(function () {
+  // ===== In-page editor: edit text and commit back to GitHub =====
+  var CFG = {
+    owner: 'Genki-Uramoto',
+    repo: 'Genki-Uramoto.github.io',
+    path: 'strategy/cto-meiryodo-ai-kickoff.html',
+    branch: 'main'
+  };
+  var bar = document.getElementById('editbar');
+  var statusEl = document.getElementById('editbar-status');
+  // Editor UI appears only when the URL ends with #edit (or ?edit). Plain URL = clean view.
+  if (!/edit/i.test(location.hash) && !/[?&]edit\b/i.test(location.search)) return;
+
+  var regions = [document.querySelector('.doc-header'), document.querySelector('.container')].filter(Boolean);
+  var editing = false;
+
+  function setStatus(t) { statusEl.textContent = t; }
+
+  function setEditing(on) {
+    editing = on;
+    regions.forEach(function (el) {
+      if (on) el.setAttribute('contenteditable', 'true');
+      else el.removeAttribute('contenteditable');
+    });
+    document.body.classList.toggle('edit-mode', on);
+    document.getElementById('btn-toggle').textContent = on ? '編集を終了' : '編集モード';
+    setStatus(on ? '編集中' : '閲覧モード');
+  }
+
+  function getToken(force) {
+    var t = sessionStorage.getItem('gh_token');
+    if (!t || force) {
+      t = window.prompt('GitHub Personal Access Token を入力（contents: write 権限。このタブを閉じるまで保持されます）', '');
+      if (t) { t = t.trim(); sessionStorage.setItem('gh_token', t); }
+    }
+    return t;
+  }
+
+  function toBase64Utf8(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+
+  function serialize() {
+    // Clean transient editor state so the committed file stays a clean view page.
+    setEditing(false);
+    bar.classList.remove('visible');
+    var prevStatus = statusEl.textContent;
+    setStatus('閲覧モード');
+    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    bar.classList.add('visible');
+    setStatus(prevStatus);
+    return html;
+  }
+
+  async function save() {
+    var token = getToken(false);
+    if (!token) { setStatus('トークン未設定'); return; }
+    var html = serialize();
+    var base = 'https://api.github.com/repos/' + CFG.owner + '/' + CFG.repo + '/contents/' + CFG.path;
+    var headers = { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' };
+    try {
+      setStatus('保存中…');
+      var getRes = await fetch(base + '?ref=' + CFG.branch, { headers: headers });
+      if (!getRes.ok) throw new Error('現在ファイル取得失敗 (' + getRes.status + ')');
+      var cur = await getRes.json();
+      var putRes = await fetch(base, {
+        method: 'PUT',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, headers),
+        body: JSON.stringify({
+          message: 'Edit kickoff doc via in-page editor',
+          content: toBase64Utf8(html),
+          sha: cur.sha,
+          branch: CFG.branch
+        })
+      });
+      if (!putRes.ok) {
+        var errText = await putRes.text();
+        throw new Error('保存失敗 (' + putRes.status + ') ' + errText.slice(0, 120));
+      }
+      setStatus('保存完了 ✓（公開反映に1〜2分）');
+    } catch (err) {
+      setStatus('⚠ ' + err.message);
+      if (err.message.indexOf('401') > -1 || err.message.indexOf('403') > -1) {
+        sessionStorage.removeItem('gh_token');
+      }
+    }
+  }
+
+  bar.classList.add('visible');
+  setStatus('閲覧モード');
+  document.getElementById('btn-toggle').onclick = function () { setEditing(!editing); };
+  document.getElementById('btn-save').onclick = save;
+  document.getElementById('btn-token').onclick = function () { getToken(true); };
+})();
+</script>
 </body>
 </html>
