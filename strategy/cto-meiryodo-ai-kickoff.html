@@ -218,8 +218,15 @@
     display: flex;
     align-items: stretch;
     gap: 0;
-    margin-top: 16px;
+    margin-top: 8px;
     flex-wrap: wrap;
+  }
+  .flow-label {
+    margin-top: 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-sub);
+    letter-spacing: 0.04em;
   }
   .flow-step {
     flex: 1;
@@ -339,6 +346,16 @@
         <li>スコアは<strong>講義単位・講師単位の両方</strong>で見られると嬉しい</li>
         <li>アラートを受けた講師を巡回対象として優先的にフォローしたい</li>
       </ul>
+      <div class="flow-label">想定フロー（イメージ）</div>
+      <div class="flow">
+        <div class="flow-step"><strong>入力</strong>受講者アンケートの<br>明瞭度スコア</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>判定</strong>2 段階閾値で<br>自動判定<br>（1 日 1 回）</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>通知</strong>Slack 専用チャネル<br>（講義/講師単位）</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>対応</strong>巡回対象決定<br>→ 現場 FB</div>
+      </div>
     </div>
 
     <div class="measure-card new">
@@ -353,14 +370,11 @@
         <li>この<strong>両面</strong>を見たい</li>
         <li>結果の見せ方は Slack 通知か BI 可視化かまだ検討中</li>
       </ul>
-    </div>
-
-    <div class="subsection">
-      <div class="subsection-title">想定フロー（イメージ）</div>
+      <div class="flow-label">想定フロー（イメージ）</div>
       <div class="flow">
         <div class="flow-step"><strong>入力</strong>登壇動画</div>
         <div class="flow-arrow">→</div>
-        <div class="flow-step"><strong>解析</strong>AI による<br>行動解析</div>
+        <div class="flow-step"><strong>解析</strong>AI による行動解析<br>（形式面＋内容面）</div>
         <div class="flow-arrow">→</div>
         <div class="flow-step"><strong>結果表示</strong>Slack 専用チャネル通知<br>or BI で可視化<br><span style="color:#D97706; font-weight:700;">※検討中</span></div>
         <div class="flow-arrow">→</div>
