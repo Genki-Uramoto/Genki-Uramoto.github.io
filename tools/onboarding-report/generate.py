@@ -172,11 +172,20 @@ def status_of(m):
 def render(members):
     members = sorted(members, key=lambda m: m["goukaku"])
     css = open(os.path.join(HERE, "style.css")).read()
+    # 伝言板タブの中身は別ファイル（手編集ソース）。週次再生成では上書きしない。
+    dengon_path = os.path.join(HERE, "dengonban.html")
+    dengon = open(dengon_path, encoding="utf-8").read() if os.path.exists(dengon_path) else '<p class="meta">（伝言板は準備中）</p>'
     o = []
     o.append(f"""<!DOCTYPE html><html lang="ja"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>新人オンボーディング進捗 — {REPORT_DATE} — PMG</title>
+<title>PMG 育成 — 伝言板 / 3か月オンボ — {REPORT_DATE}</title>
 <style>{css}</style></head><body><div class="container">
+<div class="section-tabs">
+<button class="section-btn" onclick="showSection('sec-dengon')">📋 伝言板</button>
+<button class="section-btn active" onclick="showSection('sec-onbo')">📊 3か月オンボ</button>
+</div>
+<div id="sec-dengon" class="section-pane">{dengon}</div>
+<div id="sec-onbo" class="section-pane active">
 <h1>新人オンボーディング（3か月目）タスク進捗</h1>
 <p class="meta">発行 {REPORT_DATE}（金曜夕礼用 / 自動更新）｜ 対象 6名 ｜ データ: Notion 登壇テスト後タスク + 3ヶ月目研修（A∪B統合）<br>
 締切ルール: 合格日基準（合格日 / +7d / +14d / +30d / +60d）＋ 初登壇前タスク = 各人の初登壇日基準。「おまけ」と「(再掲)」は母数外。どちらかのリストで✓なら完了。</p>""")
@@ -256,11 +265,17 @@ def render(members):
         o.append('</div>')
 
     o.append("""<div class="footer">自動生成: 新人オンボーディング進捗レポート ／ Notion（登壇テスト後タスクDB + 3ヶ月目研修 main page）統合集計。
-凡例: ⚠=締切超過(遅延) ／ ◷=今週締切 ／ 出典 A=登壇テスト後タスク, B=3ヶ月目研修, AB=両方。</div></div>
+凡例: ⚠=締切超過(遅延) ／ ◷=今週締切 ／ 出典 A=登壇テスト後タスク, B=3ヶ月目研修, AB=両方。</div></div></div>
 <script>
 function showTab(id){
-  document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('#sec-onbo .tab-content').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('#sec-onbo .tab-btn').forEach(e=>e.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+function showSection(id){
+  document.querySelectorAll('.section-pane').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.section-btn').forEach(e=>e.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   event.target.classList.add('active');
 }

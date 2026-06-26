@@ -50,3 +50,11 @@ h4.muted{color:#a0aec0}
 .src{display:inline-block;font-size:.68rem;font-weight:700;color:#a0aec0;background:#f7fafc;border:1px solid var(--border);border-radius:4px;padding:0 .3rem}
 
 .footer{margin-top:1.25rem;padding-top:.6rem;border-top:1px solid var(--border);color:var(--sub);font-size:.72rem;line-height:1.5}
+
+/* トップレベルのセクション切り替え（伝言板 / 3か月オンボ） */
+.section-tabs{display:flex;gap:.5rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.section-btn{padding:.6rem 1.2rem;background:var(--card);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:.95rem;font-weight:700;color:var(--sub);transition:all .15s}
+.section-btn:hover{border-color:var(--accent);color:var(--accent)}
+.section-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.section-pane{display:none}
+.section-pane.active{display:block}
