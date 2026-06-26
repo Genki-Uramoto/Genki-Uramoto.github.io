@@ -175,7 +175,7 @@ def render(members):
 <title>新人オンボーディング進捗 — {REPORT_DATE} — PMG</title>
 <style>{css}</style></head><body><div class="container">
 <h1>新人オンボーディング（3か月目）タスク進捗</h1>
-<p class="meta">発行 {REPORT_DATE}（金曜夕礼用 / 自動更新）｜ 対象 2604コホート 4名 ｜ データ: Notion 登壇テスト後タスク + 3ヶ月目研修（A∪B統合）<br>
+<p class="meta">発行 {REPORT_DATE}（金曜夕礼用 / 自動更新）｜ 対象 6名 ｜ データ: Notion 登壇テスト後タスク + 3ヶ月目研修（A∪B統合）<br>
 締切ルール: 合格日基準（合格日 / +7d / +14d / +30d / +60d）＋ 初登壇前タスク = <b>{DEBUT_DEADLINE}（来週金）</b>。「おまけ」は母数外。どちらかのリストで✓なら完了。</p>""")
 
     o.append('<h3>全員サマリ</h3><table class="summary-table"><thead><tr>'
