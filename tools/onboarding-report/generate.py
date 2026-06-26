@@ -178,8 +178,12 @@ def render(members):
     o = []
     o.append(f"""<!DOCTYPE html><html lang="ja"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PMG 育成 — 伝言板 / 3か月オンボ — {REPORT_DATE}</title>
+<title>PMG 新人トレーナー ダッシュボード — {REPORT_DATE}</title>
 <style>{css}</style></head><body><div class="container">
+<div class="page-head">
+<h1 class="page-title">📋 PMG 新人トレーナー ダッシュボード</h1>
+<p class="page-sub">登壇テスト合格後の新人トレーナー向け｜伝言板（コミュニケプラン）＋ 3か月オンボ進捗</p>
+</div>
 <div class="section-tabs">
 <button class="section-btn" onclick="showSection('sec-dengon')">📋 伝言板</button>
 <button class="section-btn active" onclick="showSection('sec-onbo')">📊 3か月オンボ</button>
