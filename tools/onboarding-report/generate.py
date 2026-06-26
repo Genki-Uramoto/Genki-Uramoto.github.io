@@ -82,6 +82,8 @@ def build_member(m):
     for src in ("A", "B"):
         for r in m.get(src, []):
             name = r["名前"]
+            if "(再掲)" in name or "（再掲）" in name:
+                continue  # (再掲) は分母分子の両方から完全除外（全メンバー共通）
             checked = r.get("チェック") == "__YES__"
             tags = parse_list(r.get("第一目安") if src == "B" else r.get("目安"))
             kubun = r.get("区分")
@@ -177,7 +179,7 @@ def render(members):
 <style>{css}</style></head><body><div class="container">
 <h1>新人オンボーディング（3か月目）タスク進捗</h1>
 <p class="meta">発行 {REPORT_DATE}（金曜夕礼用 / 自動更新）｜ 対象 6名 ｜ データ: Notion 登壇テスト後タスク + 3ヶ月目研修（A∪B統合）<br>
-締切ルール: 合格日基準（合格日 / +7d / +14d / +30d / +60d）＋ 初登壇前タスク = 各人の初登壇日基準。「おまけ」は母数外。どちらかのリストで✓なら完了。</p>""")
+締切ルール: 合格日基準（合格日 / +7d / +14d / +30d / +60d）＋ 初登壇前タスク = 各人の初登壇日基準。「おまけ」と「(再掲)」は母数外。どちらかのリストで✓なら完了。</p>""")
 
     o.append('<h3>全員サマリ</h3><table class="summary-table"><thead><tr>'
              '<th>メンバー</th><th>合格日</th><th>経過</th><th>完了率</th>'
