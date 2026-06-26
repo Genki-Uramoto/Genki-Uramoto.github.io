@@ -61,6 +61,27 @@ h4.muted{color:#a0aec0}
 .section-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .section-pane{display:none}
 .section-pane.active{display:block}
+
+/* 伝言板：ヒーロー＋変更カード（見せる用） */
+.dengon-hero{background:linear-gradient(135deg,#ebf8ff,#e6fffa);border:1px solid #bee3f8;border-radius:12px;padding:1.1rem 1.3rem;margin:.4rem 0 1.5rem}
+.dengon-hero .eyebrow{font-size:.74rem;font-weight:800;color:var(--accent);letter-spacing:.06em}
+.dengon-hero h2{font-size:1.3rem;line-height:1.45;margin:.25rem 0 .5rem;color:var(--text)}
+.dengon-hero p{font-size:.86rem;color:var(--sub);margin:0;line-height:1.6}
+.chg-list{display:flex;flex-direction:column;gap:.8rem}
+.chg-card{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:.9rem 1.05rem;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.chg-card.nochange{border-left-color:var(--good)}
+.chg-head{font-size:1rem;font-weight:800;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.chg-flow{display:flex;align-items:stretch;gap:.6rem;flex-wrap:wrap}
+.chg-box{flex:1 1 210px;border-radius:8px;padding:.55rem .75rem;font-size:.92rem;line-height:1.45}
+.chg-box .t{display:block;font-size:.68rem;font-weight:800;margin-bottom:.15rem;letter-spacing:.04em}
+.chg-before{background:#f7fafc;color:var(--sub);border:1px dashed #cbd5e0}
+.chg-before .t{color:#a0aec0}
+.chg-after{background:var(--accent-light);color:var(--text);border:1px solid #90cdf4;font-weight:700}
+.chg-after .t{color:var(--accent)}
+.chg-arrow{display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:var(--accent)}
+.chg-note{margin-top:.55rem;font-size:.8rem;color:var(--sub)}
+.chg-note.warn{color:var(--warn);font-weight:600}
+@media(max-width:560px){.chg-arrow{width:100%;transform:rotate(90deg);margin:.1rem 0}}
 </style></head><body><div class="container">
 <div class="section-tabs">
 <button class="section-btn" onclick="showSection('sec-dengon')">📋 伝言板</button>
@@ -69,54 +90,74 @@ h4.muted{color:#a0aec0}
 <div id="sec-dengon" class="section-pane"><!-- ============================================================
   ▼ 伝言板タブの中身。ここを自由に編集してOK。
   週次自動更新（generate.py / ルーティン）では一切上書きされません。
-  既存のCSSクラス（score-bar / eval-table / chip / status-card 等）が使えます。
+  既存のCSSクラス（dengon-hero / chg-card / status-card 等）が使えます。
 ============================================================ -->
 <h1>📋 伝言板</h1>
-<p class="meta">PMG 育成 — 新人コミュニケーションプラン｜<b>6月 → 7月</b> 切り替え（登壇テスト合格者向け）｜最終更新 2026-06-26</p>
+<p class="meta">PMG 育成 — 新人コミュニケーションプラン｜最終更新 2026-06-26</p>
 
-<div style="background:var(--accent-light);border:1px solid #bee3f8;border-radius:8px;padding:.85rem 1rem;margin:.6rem 0 1.3rem">
-  <div style="font-weight:800;color:var(--accent);margin-bottom:.35rem">大前提：7月から「チーム配属」に変更</div>
-  登壇テスト合格後2か月は <b>PMG 配属</b> の予定でしたが、<b>7月より SDG の各チーム配属</b>に変わります。<br>
-  <span class="meta">理由：SDG の各チームが Biz / DS という領域分けでなくなり、どちらの領域でも登壇できるようになったため。</span>
+<div class="dengon-hero">
+  <div class="eyebrow">大前提 ／ 7月からの変更</div>
+  <h2>🔀 登壇テスト合格者は「PMG 配属」→「チーム配属」へ</h2>
+  <p>これまで登壇テスト合格後2か月は <b>PMG 配属</b> でしたが、<b>7月より SDG の各チームへ配属</b>します。<br>
+  理由：SDG の各チームが Biz / DS の領域分けでなくなり、どちらの領域でも登壇できるようになったため。</p>
 </div>
 
-<h3>変更点 一覧（変更前 → 変更後）</h3>
-<table class="eval-table">
-<thead><tr><th style="width:22%">項目</th><th style="width:36%">〜6月（変更前）</th><th style="width:42%">7月〜（変更後）</th></tr></thead>
-<tbody>
-<tr>
-  <td><b>所属チーム</b></td>
-  <td>登壇テスト2ヶ月後まで <b>PMG 配属</b></td>
-  <td>7月より <b>SDG の各チーム配属</b></td>
-</tr>
-<tr>
-  <td><b>朝夕礼の実施スタイル</b></td>
-  <td>月・水・金</td>
-  <td><b>火・木</b></td>
-</tr>
-<tr>
-  <td><b>朝チェックイン</b></td>
-  <td><code>PMG rookie</code> スレッドに投稿</td>
-  <td><b>所属チームのスレッド</b>に投稿</td>
-</tr>
-<tr>
-  <td><b>1on1 の実施</b></td>
-  <td>浦本＝毎週／勇太さん＝隔週</td>
-  <td>浦本・勇太さんで<b>隔週</b>（＝毎週、PMG の誰かとは実施）<br>
-      <span class="status-card status-ok">配属チームのリーダーとの 1on1 は要確認</span></td>
-</tr>
-<tr>
-  <td><b>工数（PMG 確保）</b></td>
-  <td>月 <b>80h</b> を PMG で確保</td>
-  <td>月 <b>30h</b> を PMG で確保<br>
-      <span class="meta">※ 確保が減るぶん、登壇が増える可能性あり</span></td>
-</tr>
-<tr>
-  <td><b>講師力養成コース</b></td>
-  <td colspan="2" style="text-align:center"><span class="status-card status-good">変更なし — これまで通り実施</span></td>
-</tr>
-</tbody>
-</table>
+<h3>6月 → 7月 の変更点</h3>
+<div class="chg-list">
+
+  <div class="chg-card">
+    <div class="chg-head">🏢 所属チーム</div>
+    <div class="chg-flow">
+      <div class="chg-box chg-before"><span class="t">〜6月</span>登壇テスト2ヶ月後まで PMG 配属</div>
+      <div class="chg-arrow">→</div>
+      <div class="chg-box chg-after"><span class="t">7月〜</span>SDG の各チームに配属</div>
+    </div>
+  </div>
+
+  <div class="chg-card">
+    <div class="chg-head">📅 朝夕礼スタイル</div>
+    <div class="chg-flow">
+      <div class="chg-box chg-before"><span class="t">〜6月</span>月・水・金</div>
+      <div class="chg-arrow">→</div>
+      <div class="chg-box chg-after"><span class="t">7月〜</span>火・木</div>
+    </div>
+  </div>
+
+  <div class="chg-card">
+    <div class="chg-head">☀️ 朝チェックイン</div>
+    <div class="chg-flow">
+      <div class="chg-box chg-before"><span class="t">〜6月</span><code>PMG rookie</code> スレッドに投稿</div>
+      <div class="chg-arrow">→</div>
+      <div class="chg-box chg-after"><span class="t">7月〜</span>所属チームのスレッドに投稿</div>
+    </div>
+  </div>
+
+  <div class="chg-card">
+    <div class="chg-head">🤝 1on1 の実施</div>
+    <div class="chg-flow">
+      <div class="chg-box chg-before"><span class="t">〜6月</span>浦本＝毎週／勇太さん＝隔週</div>
+      <div class="chg-arrow">→</div>
+      <div class="chg-box chg-after"><span class="t">7月〜</span>浦本・勇太さんで隔週（＝毎週、どちらかと実施）</div>
+    </div>
+    <div class="chg-note warn">⚠ 配属チームのリーダーとの 1on1 は要確認</div>
+  </div>
+
+  <div class="chg-card">
+    <div class="chg-head">⏱️ 工数（PMG 確保）</div>
+    <div class="chg-flow">
+      <div class="chg-box chg-before"><span class="t">〜6月</span>月 <b>80h</b> を PMG で確保</div>
+      <div class="chg-arrow">→</div>
+      <div class="chg-box chg-after"><span class="t">7月〜</span>月 <b>30h</b> を PMG で確保</div>
+    </div>
+    <div class="chg-note">ℹ 確保が減るぶん、登壇が増える可能性あり</div>
+  </div>
+
+  <div class="chg-card nochange">
+    <div class="chg-head">🎓 講師力養成コース <span class="status-card status-good" style="margin-left:.3rem">変更なし</span></div>
+    <div class="chg-note">これまで通り実施します。</div>
+  </div>
+
+</div>
 </div>
 <div id="sec-onbo" class="section-pane active">
 <h1>新人オンボーディング（3か月目）タスク進捗</h1>
