@@ -35,7 +35,7 @@ STAGE_ORDER = ["01_合格日", "02_1週間以内", "03_2週間以内", "04_1ヶ�
                "登壇前", "登壇テスト後 1 ヶ月以内", "登壇テスト後 2 ヶ月以内", "期限未設定"]
 STAGE_LABEL = {
     "01_合格日": "合格日", "02_1週間以内": "1週間以内", "03_2週間以内": "2週間以内",
-    "04_1ヶ月以内": "1ヶ月以内", "登壇前": "初登壇前(6/12)",
+    "04_1ヶ月以内": "1ヶ月以内", "登壇前": "初登壇前",
     "登壇テスト後 1 ヶ月以内": "登壇後1ヶ月", "登壇テスト後 2 ヶ月以内": "登壇後2ヶ月",
     "期限未設定": "期限未設定",
 }
@@ -58,7 +58,7 @@ def norm(name):
     return s
 
 
-def resolve(tags, goukaku):
+def resolve(tags, goukaku, debut):
     """締切タグ群 -> (stage_label, deadline, excluded)"""
     tags = set(tags or [])
     cands = []
@@ -66,7 +66,7 @@ def resolve(tags, goukaku):
         if t in OFFSET:
             cands.append((goukaku + datetime.timedelta(days=OFFSET[t]), t))
         elif t in DEBUT_TAGS:
-            cands.append((DEBUT_DEADLINE, "登壇前"))
+            cands.append((debut, "登壇前"))
     if cands:
         cands.sort(key=lambda x: x[0])
         return cands[0][1], cands[0][0], False
@@ -77,6 +77,7 @@ def resolve(tags, goukaku):
 
 def build_member(m):
     goukaku = datetime.date.fromisoformat(m["goukaku"])
+    debut = datetime.date.fromisoformat(m["debut"]) if m.get("debut") else DEBUT_DEADLINE
     merged = {}
     for src in ("A", "B"):
         for r in m.get(src, []):
@@ -109,7 +110,7 @@ def build_member(m):
     tasks = []
     for t in merged.values():
         chosen = t["b_tags"] if t["b_tags"] else t["a_tags"]
-        stage, dl, excl = resolve(chosen, goukaku)
+        stage, dl, excl = resolve(chosen, goukaku, debut)
         overdue = (not t["checked"]) and dl is not None and dl < REPORT_DATE
         due_soon = (not t["checked"]) and dl is not None and REPORT_DATE <= dl <= REPORT_DATE + datetime.timedelta(days=7)
         tasks.append({"name": t["name"], "stage": stage, "checked": t["checked"],
@@ -136,7 +137,7 @@ def build_member(m):
             d["total"] += 1
             d["done"] += t["checked"]
 
-    return {"name": m["name"], "goukaku": goukaku, "elapsed": (REPORT_DATE - goukaku).days,
+    return {"name": m["name"], "goukaku": goukaku, "debut": debut, "elapsed": (REPORT_DATE - goukaku).days,
             "tasks": tasks, "counted": counted, "done": done, "total": len(counted),
             "rate": rate, "overdue": overdue_n, "due_soon": due_soon_n,
             "stages": stages, "bunrui": bunrui_agg, "omake": [t for t in tasks if t["excl"]]}
@@ -176,7 +177,7 @@ def render(members):
 <style>{css}</style></head><body><div class="container">
 <h1>新人オンボーディング（3か月目）タスク進捗</h1>
 <p class="meta">発行 {REPORT_DATE}（金曜夕礼用 / 自動更新）｜ 対象 6名 ｜ データ: Notion 登壇テスト後タスク + 3ヶ月目研修（A∪B統合）<br>
-締切ルール: 合格日基準（合格日 / +7d / +14d / +30d / +60d）＋ 初登壇前タスク = <b>{DEBUT_DEADLINE}（来週金）</b>。「おまけ」は母数外。どちらかのリストで✓なら完了。</p>""")
+締切ルール: 合格日基準（合格日 / +7d / +14d / +30d / +60d）＋ 初登壇前タスク = 各人の初登壇日基準。「おまけ」は母数外。どちらかのリストで✓なら完了。</p>""")
 
     o.append('<h3>全員サマリ</h3><table class="summary-table"><thead><tr>'
              '<th>メンバー</th><th>合格日</th><th>経過</th><th>完了率</th>'
@@ -212,7 +213,7 @@ def render(members):
                 continue
             d = m["stages"][s]
             if s == "登壇前":
-                dl = DEBUT_DEADLINE.strftime("%-m/%-d")
+                dl = m["debut"].strftime("%-m/%-d")
             elif s in OFFSET:
                 dl = (m["goukaku"] + datetime.timedelta(days=OFFSET[s])).strftime("%-m/%-d")
             else:
